@@ -1,10 +1,15 @@
-#!/usr/bin/python3.1
+#!/usr/bin/python
 #
-# Easy Python3 Dynamic DNS
+# Easy Python Dynamic DNS
 # By Jed Smith <jed@jedsmith.org> 4/29/2009
 # This code and associated documentation is released into the public domain.
 #
-# This script **REQUIRES** Python 3.0 or above.  Python 2.6 may work.
+# This script should work on Python 2 or Python 3. It's been tested with the
+# follow version:
+#                     * Python 2.7
+#                     * Python 3.4
+#                     * Python 3.5
+#
 # To see what version you are using, run this:
 #
 #   python --version
@@ -25,6 +30,9 @@
 #   4. Edit the four configuration options below, following the directions for
 #      each.  As this is a quick hack, it assumes everything goes right.
 #
+from __future__ import print_function
+import sys
+
 # First, the resource ID that contains the 'home' record you created above. If
 # the URI while editing that A record looks like this:
 #
@@ -81,13 +89,24 @@ DEBUG = False
 
 #####################
 # STOP EDITING HERE #
+if sys.version_info.major == 2:
+	try:
+		from json import load
+		from urllib import urlencode
+		from urllib import urlretrieve
+	except Exception as excep:
+		print(excep)
 
-try:
-	from json import load
-	from urllib.parse import urlencode
-	from urllib.request import urlretrieve
-except Exception as excp:
-	exit("Couldn't import the standard library. Are you running Python 3?")
+elif sys.version_info.major == 3:
+	try:
+		from json import load
+		from urllib.parse import urlencode
+		from urllib.request import urlretrieve
+	except Exception as excep:
+		print(excep)
+		
+else:
+	exit("What kind of Python are we running on?")
 
 def execute(action, parameters):
 	# Execute a query and return a Python dictionary.
